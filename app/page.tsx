@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 import type React from "react";
 import { Label } from "@/components/ui/label";
@@ -41,21 +42,23 @@ export default function LandingPage() {
       {/* Navigation */}
       <nav className="container mx-auto px-4 py-6 flex justify-between items-center">
         <div className="flex items-center space-x-2">
-          <BookOpen className="h-6 w-6 text-blue-600" />
+          <BookOpen className="h-6 w-6 text-blue-600 dark:text-blue-500" />
           <span className="font-bold text-xl">NoteStack</span>
         </div>
 
         <div>
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-              <Button variant="outline" className="mr-2">
+              <Button variant="outline" className="mr-2 font-medium">
                 Log in
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-md">
               <DialogHeader>
-                <DialogTitle>Login to your account</DialogTitle>
-                <DialogDescription>
+                <DialogTitle className="text-xl">
+                  Login to your account
+                </DialogTitle>
+                <DialogDescription className="text-muted-foreground">
                   Enter your email below to login to your account
                 </DialogDescription>
               </DialogHeader>
@@ -68,56 +71,109 @@ export default function LandingPage() {
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-16 md:py-24">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          <div>
-            <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
-              Your Ultimate Notetaking App for Exam Success
+          <div className="space-y-6">
+            <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
+              Your Ultimate Notetaking App for{" "}
+              <span className="text-blue-600 dark:text-blue-500">
+                Exam Success
+              </span>
             </h1>
-            <p className="text-xl text-gray-600 dark:text-gray-300 mb-8">
+            <p className="text-xl text-gray-600 dark:text-gray-300">
               Organize your study materials, collaborate with classmates, and
               ace your exams with NoteStack's powerful features.
             </p>
+            <div className="pt-2">
+              <Button className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white">
+                Learn more
+              </Button>
+            </div>
           </div>
 
           {/* Signup Form Card */}
-          <div className="shadow-input mx-auto w-full max-w-md rounded-none bg-white p-4 md:rounded-2xl md:p-8 dark:bg-black">
-            <div className="text-center mb-6">
-              <h1 className="text-xl font-bold tracking-tight mb-2 mr-32">
+          <Card className="shadow-lg border-0 dark:bg-gray-900 mx-auto w-full max-w-md">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-xl font-bold">
                 Sign Up to Join NoteStack
-              </h1>
-            </div>
-            <form className="my-8" onSubmit={handleSignupSubmit}>
-              <div className="mb-4 flex flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-2">
+              </CardTitle>
+              <CardDescription>
+                Create your account to get started
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form className="space-y-4" onSubmit={handleSignupSubmit}>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <LabelInputContainer>
+                    <Label htmlFor="firstname" className="font-medium">
+                      First name
+                    </Label>
+                    <Input
+                      id="firstname"
+                      placeholder="Tyler"
+                      type="text"
+                      className="border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </LabelInputContainer>
+                  <LabelInputContainer>
+                    <Label htmlFor="lastname" className="font-medium">
+                      Last name
+                    </Label>
+                    <Input
+                      id="lastname"
+                      placeholder="Durden"
+                      type="text"
+                      className="border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </LabelInputContainer>
+                </div>
                 <LabelInputContainer>
-                  <Label htmlFor="firstname">First name</Label>
-                  <Input id="firstname" placeholder="Tyler" type="text" />
+                  <Label htmlFor="email" className="font-medium">
+                    Email Address
+                  </Label>
+                  <Input
+                    id="email"
+                    placeholder="projectmayhem@fc.com"
+                    type="email"
+                    className="border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  />
                 </LabelInputContainer>
                 <LabelInputContainer>
-                  <Label htmlFor="lastname">Last name</Label>
-                  <Input id="lastname" placeholder="Durden" type="text" />
+                  <Label htmlFor="password" className="font-medium">
+                    Password
+                  </Label>
+                  <Input
+                    id="password"
+                    placeholder="••••••••"
+                    type="password"
+                    className="border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  />
                 </LabelInputContainer>
-              </div>
-              <LabelInputContainer className="mb-4">
-                <Label htmlFor="email">Email Address</Label>
-                <Input
-                  id="email"
-                  placeholder="projectmayhem@fc.com"
-                  type="email"
-                />
-              </LabelInputContainer>
-              <LabelInputContainer className="mb-4">
-                <Label htmlFor="password">Password</Label>
-                <Input id="password" placeholder="••••••••" type="password" />
-              </LabelInputContainer>
 
-              <button
-                className="group/btn relative block h-10 w-full rounded-md bg-gradient-to-br from-black to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset]"
-                type="submit"
-              >
-                Sign up &rarr;
-                <BottomGradient />
-              </button>
-            </form>
-          </div>
+                <button
+                  className="group/btn relative block h-12 w-full rounded-md bg-gradient-to-br from-blue-600 to-blue-800 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:from-blue-700 dark:to-blue-900 dark:shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset] transition-all duration-300 hover:shadow-blue-500/20 hover:shadow-lg"
+                  type="submit"
+                >
+                  <span className="relative z-10">Sign up &rarr;</span>
+                </button>
+
+                <p className="text-center text-sm text-gray-500 dark:text-gray-400 pt-2">
+                  By signing up, you agree to our{" "}
+                  <a
+                    href="#"
+                    className="text-blue-600 dark:text-blue-500 hover:underline"
+                  >
+                    Terms of Service
+                  </a>{" "}
+                  and{" "}
+                  <a
+                    href="#"
+                    className="text-blue-600 dark:text-blue-500 hover:underline"
+                  >
+                    Privacy Policy
+                  </a>
+                </p>
+              </form>
+            </CardContent>
+          </Card>
         </div>
       </section>
     </div>
@@ -134,35 +190,51 @@ function LoginForm({
       <form onSubmit={onSubmit}>
         <div className="flex flex-col gap-6">
           <div className="grid gap-3">
-            <Label htmlFor="login-email">Email</Label>
+            <Label htmlFor="login-email" className="font-medium">
+              Email
+            </Label>
             <Input
               id="login-email"
               type="email"
               placeholder="m@example.com"
               required
+              className="border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
           <div className="grid gap-3">
             <div className="flex items-center">
-              <Label htmlFor="login-password">Password</Label>
+              <Label htmlFor="login-password" className="font-medium">
+                Password
+              </Label>
               <a
                 href="#"
-                className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
+                className="ml-auto inline-block text-sm text-blue-600 dark:text-blue-500 hover:underline underline-offset-4"
               >
                 Forgot your password?
               </a>
             </div>
-            <Input id="login-password" type="password" required />
+            <Input
+              id="login-password"
+              type="password"
+              required
+              className="border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
           </div>
           <div className="flex flex-col gap-3">
-            <Button type="submit" className="w-full">
+            <Button
+              type="submit"
+              className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white h-11"
+            >
               Login
             </Button>
           </div>
         </div>
         <div className="mt-4 text-center text-sm">
           Don&apos;t have an account?{" "}
-          <a href="./" className="underline underline-offset-4">
+          <a
+            href="./"
+            className="text-blue-600 dark:text-blue-500 hover:underline underline-offset-4"
+          >
             Sign up
           </a>
         </div>
@@ -170,15 +242,6 @@ function LoginForm({
     </div>
   );
 }
-
-const BottomGradient = () => {
-  return (
-    <>
-      <span className="absolute inset-x-0 -bottom-px block h-px w-full bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-0 transition duration-500 group-hover/btn:opacity-100" />
-      <span className="absolute inset-x-10 -bottom-px mx-auto block h-px w-1/2 bg-gradient-to-r from-transparent via-indigo-500 to-transparent opacity-0 blur-sm transition duration-500 group-hover/btn:opacity-100" />
-    </>
-  );
-};
 
 const LabelInputContainer = ({
   children,
