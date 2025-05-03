@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { PlusCircle, Trash2, LogOut } from "lucide-react";
+import { PlusCircle, Trash2, LogOut, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -13,13 +13,111 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { toast } from "sonner";
+import { toast, Toaster } from "sonner";
+import { Progress } from "@/components/ui/progress";
 
 interface Note {
   id: string;
   title: string;
   content: string;
   created_at: string;
+}
+
+// Function to decode JWT token
+function getTokenExpiryTime(token: string | null): number | null {
+  if (!token) return null;
+
+  try {
+    const base64Url = token.split(".")[1];
+    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+    const payload = JSON.parse(window.atob(base64));
+
+    return payload.exp || null;
+  } catch (error) {
+    console.error("Error decoding token:", error);
+    return null;
+  }
+}
+
+// JWT Timer Component, I have a timer component made in my full stack web app so I copied it and edited it to use JWT token
+function JWTExpiryTimer() {
+  const [expiryTime, setExpiryTime] = useState<number | null>(null);
+  const [timeLeft, setTimeLeft] = useState<number>(0);
+  const [totalTime, setTotalTime] = useState<number>(15 * 60);
+  const [progress, setProgress] = useState<number>(100);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const expiry = getTokenExpiryTime(token);
+
+    if (expiry) {
+      setExpiryTime(expiry);
+      setTotalTime(900);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!expiryTime) return;
+
+    const interval = setInterval(() => {
+      const now = Math.floor(Date.now() / 1000);
+      const remaining = expiryTime - now;
+
+      if (remaining <= 0) {
+        setTimeLeft(0);
+        setProgress(0);
+        clearInterval(interval);
+        toast.error("Session expired", {
+          description: "Please log in again",
+        });
+        setTimeout(() => {
+          localStorage.removeItem("token");
+          window.location.reload();
+        }, 2000);
+      } else {
+        setTimeLeft(remaining);
+        const progressPercent = (remaining / totalTime) * 100;
+        setProgress(Math.max(0, Math.min(100, progressPercent)));
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [expiryTime, totalTime]);
+
+  const formatTime = (seconds: number): string => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, "0")}:${secs
+      .toString()
+      .padStart(2, "0")}`;
+  };
+
+  const getColorClass = (): string => {
+    if (progress > 50) return "bg-green-500";
+    if (progress > 20) return "bg-yellow-500";
+    return "bg-red-500";
+  };
+
+  return (
+    <div className="flex flex-col items-center space-y-2 mb-6 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg">
+      <div className="flex items-center space-x-2">
+        <Clock className="h-4 w-4 text-gray-500" />
+        <span className="font-medium">Session expires in:</span>
+        <span
+          className={`font-bold ${
+            timeLeft < 60
+              ? "text-red-500"
+              : timeLeft < 300
+              ? "text-yellow-500"
+              : "text-green-500"
+          }`}
+        >
+          {formatTime(timeLeft)}
+        </span>
+      </div>
+      <Progress value={progress} className={`w-full h-2 ${getColorClass()}`} />
+    </div>
+  );
 }
 
 export default function NoteTakingApp() {
@@ -32,7 +130,6 @@ export default function NoteTakingApp() {
   const [password, setPassword] = useState("");
   const [loginLoading, setLoginLoading] = useState(false);
 
-  // Authentication functions
   const login = async () => {
     try {
       setLoginLoading(true);
@@ -70,7 +167,6 @@ export default function NoteTakingApp() {
     toast.info("Logged out successfully");
   };
 
-  // Check token on component mount
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -81,7 +177,6 @@ export default function NoteTakingApp() {
     }
   }, []);
 
-  // API functions
   const fetchNotes = async () => {
     try {
       setIsLoading(true);
@@ -112,9 +207,9 @@ export default function NoteTakingApp() {
   };
 
   const handleAddNote = async () => {
-    if (!title.trim()) {
-      toast.error("Title required", {
-        description: "Please add a title for your note",
+    if (!title.trim() || !content.trim()) {
+      toast.error("Information missing", {
+        description: "Please add a title for your note and description",
       });
       return;
     }
@@ -150,8 +245,6 @@ export default function NoteTakingApp() {
     }
   };
 
-  // No edit functionality
-
   const handleDelete = async (id: string) => {
     try {
       const token = localStorage.getItem("token");
@@ -183,10 +276,12 @@ export default function NoteTakingApp() {
     });
     return formatter.format(new Date(dateString));
   };
+
   // Login form
   if (!isAuthenticated) {
     return (
       <div className="container mx-auto py-20 px-4 flex justify-center">
+        <Toaster position="bottom-right" />
         <Card className="w-full max-w-md">
           <CardHeader>
             <CardTitle className="text-2xl text-center">Login</CardTitle>
@@ -223,6 +318,7 @@ export default function NoteTakingApp() {
 
   return (
     <div className="container mx-auto py-10 px-4">
+      <Toaster position="top-center" />
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">My Notes</h1>
         <Button variant="outline" onClick={logout}>
@@ -230,6 +326,9 @@ export default function NoteTakingApp() {
           Logout
         </Button>
       </div>
+
+      {/* JWT Expiry Timer Component */}
+      <JWTExpiryTimer />
 
       <div className="grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-8">
         <Card>
@@ -293,7 +392,7 @@ export default function NoteTakingApp() {
                       size="icon"
                       onClick={() => handleDelete(note.id)}
                     >
-                      <Trash2 className="h-4 w-4" />
+                      <Trash2 className="h-4 w-4 text-red-800" />
                       <span className="sr-only">Delete</span>
                     </Button>
                   </CardFooter>

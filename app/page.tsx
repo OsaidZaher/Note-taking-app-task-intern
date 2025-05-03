@@ -6,6 +6,10 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { BookOpen } from "lucide-react";
+import { useRouter } from "next/navigation";
+
+import { toast, Toaster } from "sonner";
+
 import {
   Card,
   CardContent,
@@ -17,6 +21,7 @@ import {
 export default function LandingPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,15 +37,18 @@ export default function LandingPage() {
     if (res.ok) {
       const data = await res.json();
       localStorage.setItem("token", data.token);
-      alert("Logged in successfully!");
+      toast.success("user has logged in");
+
+      router.push("/notes");
     } else {
-      alert("Invalid credentials");
+      toast.error("Invalid credentials");
     }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-50 dark:from-gray-950 dark:to-black">
-      {/* Navigation */}
+      <Toaster position="bottom-right" />
+
       <nav className="container mx-auto px-4 py-6 flex justify-between items-center">
         <div className="flex items-center space-x-2">
           <BookOpen className="h-6 w-6 text-blue-600 dark:text-blue-500" />
@@ -48,7 +56,6 @@ export default function LandingPage() {
         </div>
       </nav>
 
-      {/* Hero Section */}
       <section className="container mx-auto px-4 py-16 md:py-24">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div className="space-y-6">
@@ -65,7 +72,6 @@ export default function LandingPage() {
             <div className="pt-2"></div>
           </div>
 
-          {/* Signup Form Card */}
           <Card className="shadow-lg border-0 dark:bg-gray-900 mx-auto w-full max-w-md">
             <CardHeader className="pb-2">
               <CardTitle className="text-xl font-bold">
