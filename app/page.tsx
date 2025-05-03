@@ -67,7 +67,7 @@ export default function LandingPage() {
             </h1>
             <p className="text-xl text-gray-600 dark:text-gray-300">
               Organize your study materials, collaborate with classmates, and
-              ace your exams with NoteStack's powerful features.
+              ace your exams with NoteStack powerful features.
             </p>
             <div className="pt-2"></div>
           </div>
