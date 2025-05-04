@@ -1,36 +1,103 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Note Taking App
 
-## Getting Started
+A simple note-taking application built with Next.js and Supabase.
 
-First, run the development server:
+## Technologies Used
+
+- **Frontend**: Next.js, React, TypeScript, Tailwind CSS
+- **UI Components**: shadcn/ui
+- **Backend**: Express.js (dev), 
+- **Database**: Supabase
+- **Authentication**: JWT
+- **State Management**: React Hooks
+- **Notifications**: Sonner
+- **Icons**: Lucide React
+
+## Prerequisites
+
+- Node.js (v16 or later)
+- npm or yarn
+
+## Installation
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/OsaidZaher/Note-taking-app-task-intern
+cd note-taking-app
+```
+
+2. Install dependencies:
+
+```bash
+npm install
+# or
+yarn install
+```
+
+3. All environment variables and Supabase connections are already configured in the project. No additional setup is required for database connectivity.
+
+## Running the Application
+
+### Development Mode
+
+Start the Express backend server and front end in one command:
 
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The application will be available at `http://localhost:3000`
+The server will be available at `http://localhost:5000`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Start the production server:
 
-## Learn More
+```bash
+npm start
+# or
+yarn start
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Test Credentials
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Username: `intern`
+Password: `letmein`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+### Running Unit Tests
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npm test
+# or
+yarn test
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Running Cypress Tests
+
+First, make sure the development server is running:
+
+```bash
+npm run dev
+# or
+yarn dev
+```
+
+Then, in another terminal, run Cypress:
+
+```bash
+npm run cypress
+# or
+yarn cypress
+```
+
+## Development vs Production and TradeOffs
+
+
+- In development, API requests are proxied to the Express server running on port 5000
+- In production on Vercel, it will not work without a connection to a server hosting service like Heroku- which is not implemented due to the scope of the project.
+- In reality I wouldn't use ExpressJs for the backend with typescript, nextJs route is perfect.
+- THe nature of this project is weird since NextJs has their own route and it was my first time coding ExpressJs in Typescript, In the future maybe I would use a React app instead of NextJs app, but also in the future I would only use NextJs.
+
